@@ -1,0 +1,25 @@
+
+stages:
+  - build
+  - test
+  - deploy
+
+build_model:
+  stage: build
+  script:
+    - echo "Build the Docker image for the ML model..."
+    - docker build -t my-model:$CI_COMMIT_REF_SLUG .
+
+test_model:
+  stage: test
+  script:
+    - echo "Run tests on the built model..."
+    - docker run my-model:$CI_COMMIT_REF_SLUG /bin/sh -c "python test.py"
+
+deploy_to_kubeflow:
+  stage: deploy
+  script:
+    - echo "Deploy the model to Kubeflow..."
+    - python deploy_to_kubeflow.py $CI_COMMIT_REF_SLUG
+  only:
+    - main

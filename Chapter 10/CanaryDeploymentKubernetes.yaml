@@ -1,0 +1,21 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ml-model-canary
+spec:
+  replicas: 1 # a small portion of the traffic
+  selector:
+    matchLabels:
+      app: ml-model
+  template:
+    metadata:
+      labels:
+        app: ml-model
+        track: canary
+    spec:
+      containers:
+      - name: ml-model
+        image: ml-model:v2
+        ports:
+        - containerPort: 80

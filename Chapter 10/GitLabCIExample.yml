@@ -1,0 +1,43 @@
+
+stages:
+  - validate
+  - train
+  - evaluate
+  - deploy
+
+validate_data:
+  stage: validate
+  script:
+    - echo "Validating data..."
+    - python validate_data.py
+  artifacts:
+    paths:
+      - validated_data.pkl
+
+train_model:
+  stage: train
+  script:
+    - echo "Training model..."
+    - python train_model.py
+  artifacts:
+    paths:
+      - model.pkl
+
+evaluate_model:
+  stage: evaluate
+  script:
+    - echo "Evaluating model..."
+    - python evaluate_model.py
+  dependencies:
+    - train_model
+  artifacts:
+    paths:
+      - performance_report.txt
+
+deploy_model:
+  stage: deploy
+  script:
+    - echo "Deploying model..."
+    - python deploy_model.py
+  only:
+    - main

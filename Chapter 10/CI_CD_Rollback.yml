@@ -1,0 +1,7 @@
+
+rollback:
+  script:
+    - if [ "$MODEL_PERFORMANCE_METRIC" -lt "$ACCEPTANCE_THRESHOLD" ]; then
+        echo "Rolling back to previous model version..."
+        - rollback_model_version --to=previous
+      fi

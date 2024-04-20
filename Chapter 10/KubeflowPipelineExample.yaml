@@ -1,0 +1,27 @@
+
+apiVersion: kubeflow.org/v1
+kind: Pipeline
+metadata:
+  name: sample-pipeline
+spec:
+  templates:
+  - name: preprocess-data
+    container:
+      image: my-registry/preprocess:latest
+      command: ["python", "/preprocess.py"]
+  - name: train-model
+    container:
+      image: my-registry/train:latest
+      command: ["python", "/train.py"]
+      args: ["--data", "{{workflow.outputs.artifacts.preprocessed-data}}"]
+  - name: deploy-model
+    container:
+      image: my-registry/deploy:latest
+      command: ["python", "/deploy.py"]
+      args: ["--model", "{{workflow.outputs.artifacts.trained-model}}"]
+
+  entrypoint: sample-pipeline
+  arguments:
+    parameters:
+    - name: data-path
+      value: s3://my-bucket/raw-data

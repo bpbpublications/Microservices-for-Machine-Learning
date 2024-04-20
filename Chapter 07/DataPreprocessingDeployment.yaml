@@ -1,0 +1,21 @@
+
+# data-preprocessing-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: data-preprocessing-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: data-preprocessor
+  template:
+    metadata:
+      labels:
+        app: data-preprocessor
+    spec:
+      containers:
+      - name: data-preprocessor
+        image: music/data-preprocessor:v1
+        ports:
+        - containerPort: 8080
